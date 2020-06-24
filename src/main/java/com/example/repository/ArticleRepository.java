@@ -19,15 +19,11 @@ public class ArticleRepository {
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 	
-	@Autowired
-	private static CommentRepository repository;
-	
 	private static final RowMapper<Article> ARTICLE_ROW_MAPPER = (rs, i) -> {
 		Article article = new Article();
 		article.setId(rs.getInt("id"));
 		article.setName(rs.getString("name"));
 		article.setContent(rs.getString("content"));
-		article.setCommentList(repository.findByArticledId(article.getId()));
 		return article;
 	};
 	

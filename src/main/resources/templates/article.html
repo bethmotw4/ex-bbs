@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link href=".css" th:href="@{/.css}" rel="stylesheet">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>掲示板</h2>
+	<div class="articleInput">
+		<form action="article.html" th:action="@{/article/insert}" th:object="${articleForm}" method="post">
+			<label for="name" th:for="name">投稿者名</label>:
+			<input id="name" th:id="name" type="text" name="name" th:field=*{name}><br>
+			<label for="content" th:for="content">投稿内容</label>:
+			<textarea id="content" th:id="content" name="content" th:field="*{content}" rows="3" cols="30"></textarea><br>
+			<button>記事投稿</button>
+		</form>
+	</div>
+	<div>
+		<form action="article.html" th:action="@{/article/delete}" method="post">
+			投稿者名:<span th:text="${article.name}">name</span><br>
+			投稿内容:<br><pre th:text="${article.comment}"></pre><br>
+			<button>記事削除</button>
+		</form>
+	</div>
+	<div th:if="${commentList}" th:each="comment:${commentList}">
+		コメント者名:<div th:text="${comment.name}">name</div>
+		コメント内容:<br><pre th:text="${comment.content}"></pre>
+	</div>
+	<div>
+		<form action="article.html" th:action="@{/article/comment}" th:object="${commentForm}" method="post">
+		
+		</form>
+	</div>
+</body>
+</html>
