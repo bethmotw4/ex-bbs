@@ -9,23 +9,23 @@ package com.example.form;
 public class ArticleForm {
 	/** 名前 */
 	private String name;
-	/** コメント */
-	private String comment;
+	/** コンテント */
+	private String content;
 	public String getName() {
 		return name;
 	}
 	public void setName(String name) {
 		this.name = name;
 	}
-	public String getComment() {
-		return comment;
+	public String getContent() {
+		return content;
 	}
-	public void setComment(String comment) {
-		this.comment = comment;
+	public void setContent(String content) {
+		this.content = content;
 	}
 	@Override
 	public String toString() {
-		return "ArticleForm [name=" + name + ", comment=" + comment + "]";
+		return "ArticleForm [name=" + name + ", content=" + content + "]";
 	}
 	
 }

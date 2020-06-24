@@ -7,6 +7,7 @@
 </head>
 <body>
 	<h2>掲示板</h2>
+<!-- 	記事を投稿する -->
 	<div class="articleInput">
 		<form action="article.html" th:action="@{/article/insert}" th:object="${articleForm}" method="post">
 			<label for="name" th:for="name">投稿者名</label>:
@@ -16,21 +17,36 @@
 			<button>記事投稿</button>
 		</form>
 	</div>
-	<div>
-		<form action="article.html" th:action="@{/article/delete}" method="post">
-			投稿者名:<span th:text="${article.name}">name</span><br>
-			投稿内容:<br><pre th:text="${article.comment}"></pre><br>
-			<button>記事削除</button>
-		</form>
+<!-- 	記事を表示する -->
+	<div th:if="${articleList}" th:each="article, status:${articleList}">
+		<hr>
+<!-- 		記事削除 -->
+		<div>
+			<form action="article.html" th:action="@{/article/delete}" method="post">
+				投稿者名:<span th:text="${article.name}">name</span><br>
+				投稿内容:<br><pre th:text="${article.content}">comment</pre><br>
+				<button>記事削除</button>
+			</form>
+		</div>
+<!-- 		コメント表示 -->
+		<div th:if="${article.commentList}" th:each="comment:${article.commentList}">
+			<div>
+				コメント者名:<span th:text="${comment.name}">name</span>
+			</div>
+		コメント内容:<br><pre th:text="${comment.content}">comment</pre>
+		</div>
+<!-- 		コメント投稿 -->
+		<div>
+			<form action="article.html" th:action="@{/article/comment}" th:object="${commentForm}" method="post">
+				<label for="name" th:for="name">名前</label>:<br>
+				<input id="name" th:id="name" type="text" name="name" th:field=*{name}><br>
+				<label for="content" th:for="content">コメント</label>:<br>
+				<textarea id="content" th:id="content" name="content" th:field="*{content}" rows="3" cols="30"></textarea><br>
+				<input type="hidden" name="articleId" th:value="${article.id}">
+				<button>コメント投稿</button>
+			</form>
+		</div>
 	</div>
-	<div th:if="${commentList}" th:each="comment:${commentList}">
-		コメント者名:<div th:text="${comment.name}">name</div>
-		コメント内容:<br><pre th:text="${comment.content}"></pre>
-	</div>
-	<div>
-		<form action="article.html" th:action="@{/article/comment}" th:object="${commentForm}" method="post">
-		
-		</form>
-	</div>
+	
 </body>
 </html>

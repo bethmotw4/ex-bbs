@@ -40,10 +40,10 @@ public class CommentRepository {
 	 * @param articled 投稿ID
 	 * @return コメント
 	 */
-	public List<Comment> findByArticledId(int articled) {
+	public List<Comment> findByArticledId(int articleId) {
 		String sql = "SELECT id, name, content, article_id FROM comments "
-				+ "WHERE article_id=:articleId ORDER BY id;";
-		SqlParameterSource source = new MapSqlParameterSource().addValue("articledId", articled);
+				+ "WHERE article_id=:articledId ORDER BY id;";
+		SqlParameterSource source = new MapSqlParameterSource().addValue("articledId", articleId);
 		return template.query(sql, source, COMMENT_ROW_MAPPER);
 	}
 	
