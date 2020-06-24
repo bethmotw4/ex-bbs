@@ -12,7 +12,14 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Article;
+import com.example.domain.Comment;
 
+/**
+ * articleテーブルを操作するリポジトリ.
+ * 
+ * @author yoshiki.morimoto
+ *
+ */
 @Repository
 @Transactional
 public class ArticleRepository {
@@ -24,6 +31,15 @@ public class ArticleRepository {
 		article.setId(rs.getInt("id"));
 		article.setName(rs.getString("name"));
 		article.setContent(rs.getString("content"));
+		return article;
+	};
+	
+	private static final RowMapper<Article> ARTICLE_ROW_MAPPER2 = (rs, i) -> {
+		Article article = new Article();
+		article.setId(rs.getInt("id"));
+		article.setName(rs.getString("name"));
+		article.setContent(rs.getString("content"));
+		Comment comment = new Comment();
 		return article;
 	};
 	
@@ -51,11 +67,18 @@ public class ArticleRepository {
 	/**
 	 * 投稿記事を削除する.
 	 * 
-	 * @param id ID
+	 * @param id 投稿ID
 	 */
 	public void deleteById(int id) {
 		String sql = "DELETE FROM articles WHERE id=:id;";
 		SqlParameterSource source = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, source);
+	}
+	
+	public List<Article> findAll2() {
+		String sql = "SELECT a.id AS id, a.name AS name, a.content AS content, c.id AS com_id, "
+				+ "c.name AS com_name, c.content AS com_content, c.article_id "
+				+ "FROM articles AS a JOIN comments AS c ON a.id=c.article_id "
+				+ "WHERE a.id=c.article_id";
 	}
 }

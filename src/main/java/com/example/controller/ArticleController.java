@@ -61,9 +61,9 @@ public class ArticleController {
 	@RequestMapping("")
 	public String index(Model model) {
 		List<Article> articleList = articleRepository.findAll();
-		List<Comment> commentList = new ArrayList<>();
+//		List<Comment> commentList = new ArrayList<>();
 		for (Article article : articleList) {
-			commentList = commentRepository.findByArticledId(article.getId());
+			List<Comment> commentList = commentRepository.findByArticledId(article.getId());
 			article.setCommentList(commentList);
 		}
 		model.addAttribute("articleList", articleList);
@@ -98,6 +98,19 @@ public class ArticleController {
 		BeanUtils.copyProperties(form, comment);
 		comment.setArticleId(Integer.parseInt(form.getArticleId()));
 		commentRepository.insert(comment);
+		return "redirect:/article";
+	}
+	
+	/**
+	 * 投稿記事を削除する.
+	 * 
+	 * @param id 投稿ID
+	 * @return 掲示板画面
+	 */
+	@RequestMapping("/delete")
+	public String deleteArticle(Integer articleId) {
+		commentRepository.deleteByArticleId(articleId);
+		articleRepository.deleteById(articleId);
 		return "redirect:/article";
 	}
 }

@@ -18,13 +18,14 @@
 		</form>
 	</div>
 <!-- 	記事を表示する -->
-	<div th:if="${articleList}" th:each="article, status:${articleList}">
+	<div th:if="${articleList}" th:each="article:${articleList}">
 		<hr>
 <!-- 		記事削除 -->
 		<div>
-			<form action="article.html" th:action="@{/article/delete}" method="post">
 				投稿者名:<span th:text="${article.name}">name</span><br>
 				投稿内容:<br><pre th:text="${article.content}">comment</pre><br>
+			<form action="article.html" th:action="@{/article/delete}" method="post">
+				<input type="hidden" name="articleId" th:value="${article.id}">
 				<button>記事削除</button>
 			</form>
 		</div>
