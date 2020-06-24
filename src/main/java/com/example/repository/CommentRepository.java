@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -44,5 +45,27 @@ public class CommentRepository {
 				+ "WHERE article_id=:articleId ORDER BY id;";
 		SqlParameterSource source = new MapSqlParameterSource().addValue("articledId", articled);
 		return template.query(sql, source, COMMENT_ROW_MAPPER);
+	}
+	
+	/**
+	 * コメントを登録する.
+	 * 
+	 * @param comment コメント
+	 */
+	public void insert(Comment comment) {
+		String sql = "INSERT INTO comments(name, content, article_id) VALUES(:name, :content, :articleId);";
+		SqlParameterSource source = new BeanPropertySqlParameterSource(comment);
+		template.update(sql, source);
+	}
+	
+	/**
+	 * コメントを削除する.
+	 * 
+	 * @param articleId 投稿ID
+	 */
+	public void deleteByArticleId(int articleId) {
+		String sql = "DELETE FROM comments WHERE article_id=:articleId;";
+		SqlParameterSource source = new MapSqlParameterSource().addValue("articleId", articleId);
+		template.update(sql, source);
 	}
 }
