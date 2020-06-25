@@ -41,13 +41,15 @@
 <!-- 		コメント投稿 -->
 		<div>
 			<form action="article.html" th:action="@{/article/comment}" th:object="${commentForm}" method="post">
-				<div th:errors="*{name}" style="color: red">name error</div>
-				<label for="name" th:for="name">名前</label>:<br>
-				<input id="name" th:id="name" type="text" name="name" th:field=*{name}><br>
-				<div th:errors="*{content}" style="color: red">content error</div>
-				<label for="content" th:for="content">コメント</label>:<br>
-				<textarea id="content" th:id="content" name="content" th:field="*{content}" rows="3" cols="30"></textarea><br>
 				<input type="hidden" name="articleId" th:value="${article.id}">
+				<div th:if="${article.id} == *{articleId}" th:errors="*{name}" style="color: red">name error</div>
+				<label for="name" th:for="name">名前</label>:<br>
+				<input th:if="${article.id} == *{articleId}" id="name" th:id="name" type="text" name="name" th:field=*{name}><br>
+				<input th:if="${article.id} != *{articleId}" id="name" th:id="name" type="text" name="name"><br>
+				<div th:if="${article.id}==*{articleId}" th:errors="*{content}" style="color: red">content error</div>
+				<label for="content" th:for="content">コメント</label>:<br>
+				<textarea th:if="${article.id} == *{articleId}" id="content" th:id="content" name="content" th:field="*{content}" rows="3" cols="30"></textarea><br>
+				<textarea th:if="${article.id} != *{articleId}" id="content" th:id="content" name="content" rows="3" cols="30"></textarea><br>
 				<button>コメント投稿</button>
 			</form>
 		</div>

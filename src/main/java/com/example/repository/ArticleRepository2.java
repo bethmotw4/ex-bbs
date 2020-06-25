@@ -53,8 +53,6 @@ public class ArticleRepository2 {
 //				現在のarticles.idを保持
 				key = rs.getInt("id");
 				article = ARTICLE_ROW_MAPPER.mapRow(rs, articleIdx++);
-//				System.out.println(article);
-//				System.out.println("articleIdx" + articleIdx);
 				commentList = new ArrayList<>();
 				article.setCommentList(commentList);
 				commentIdx = 0;
@@ -63,10 +61,7 @@ public class ArticleRepository2 {
 //			article_idがnullでなければコメントリストに追加
 			if (rs.getObject("article_id") != null) {
 				commentList.add(COMMENT_ROW_MAPPER.mapRow(rs, commentIdx++));
-//				System.out.println("commentIdx" + commentIdx);
-//				System.out.println(article);
 			}
-//			System.out.println("=============================================");
 		}
 		return articleList;
 	};
