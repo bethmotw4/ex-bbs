@@ -1,6 +1,5 @@
 package com.example.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.domain.Article;
-import com.example.domain.Comment;
 
 /**
  * articleテーブルを操作するリポジトリ.
@@ -34,8 +32,6 @@ public class ArticleRepository {
 		article.setContent(rs.getString("content"));
 		return article;
 	};
-	
-	
 	
 	/**
 	 * 投稿記事一覧を取得する.
@@ -68,14 +64,4 @@ public class ArticleRepository {
 		SqlParameterSource source = new MapSqlParameterSource().addValue("id", id);
 		template.update(sql, source);
 	}
-	
-//	public List<Article> findAll2() {
-//		String sql = "SELECT a.id AS id, a.name AS name, a.content AS content, c.id AS com_id, "
-//				+ "c.name AS com_name, c.content AS com_content, c.article_id AS article_id "
-//				+ "FROM articles AS a JOIN comments AS c ON a.id=c.article_id "
-//				+ "WHERE a.id=c.article_id;";
-//		return template.query(sql, ARTICLE_ROW_MAPPER2);
-//	}
-	
-
 }
