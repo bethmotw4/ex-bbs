@@ -7,6 +7,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -15,6 +17,7 @@ import com.example.domain.Comment;
 import com.example.form.ArticleForm;
 import com.example.form.CommentForm;
 import com.example.repository.ArticleRepository;
+import com.example.repository.ArticleRepository2;
 import com.example.repository.CommentRepository;
 
 /**
@@ -27,7 +30,9 @@ import com.example.repository.CommentRepository;
 @RequestMapping("/article")
 public class ArticleController {
 	@Autowired
-	private ArticleRepository articleRepository;
+//	private ArticleRepository articleRepository;
+	
+	private ArticleRepository2 articleRepository;
 	
 	@Autowired
 	private CommentRepository commentRepository;
@@ -61,11 +66,10 @@ public class ArticleController {
 	@RequestMapping("")
 	public String index(Model model) {
 		List<Article> articleList = articleRepository.findAll();
-//		List<Comment> commentList = new ArrayList<>();
-		for (Article article : articleList) {
-			List<Comment> commentList = commentRepository.findByArticledId(article.getId());
-			article.setCommentList(commentList);
-		}
+//		for (Article article : articleList) {
+//			List<Comment> commentList = commentRepository.findByArticledId(article.getId());
+//			article.setCommentList(commentList);
+//		}
 		model.addAttribute("articleList", articleList);
 		return "article";
 	}
@@ -77,9 +81,13 @@ public class ArticleController {
 	 * @return 掲示板画面
 	 */
 	@RequestMapping("/insert")
-	public String insertArticle(ArticleForm form) {
+	public String insertArticle(@Validated ArticleForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return index(model);
+		}
 		Article article = new Article();
 		BeanUtils.copyProperties(form, article);
+		System.out.println(article);
 		articleRepository.insert(article);
 		
 		return "redirect:/article";
@@ -92,7 +100,10 @@ public class ArticleController {
 	 * @return 掲示板画面
 	 */
 	@RequestMapping("/comment")
-	public String insertComment(CommentForm form) {
+	public String insertComment(@Validated CommentForm form, BindingResult result, Model model) {
+		if (result.hasErrors()) {
+			return index(model);
+		}
 		Comment comment = new Comment();
 //		articleIDがintとstring
 		BeanUtils.copyProperties(form, comment);

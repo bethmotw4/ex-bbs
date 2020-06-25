@@ -1,5 +1,6 @@
 package com.example.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,26 +69,13 @@ public class ArticleRepository {
 		template.update(sql, source);
 	}
 	
-	public List<Article> findAll2() {
-		String sql = "SELECT a.id AS id, a.name AS name, a.content AS content, c.id AS com_id, "
-				+ "c.name AS com_name, c.content AS com_content, c.article_id AS article_id "
-				+ "FROM articles AS a JOIN comments AS c ON a.id=c.article_id "
-				+ "WHERE a.id=c.article_id;";
-		return template.query(sql, ARTICLE_ROW_MAPPER2);
-	}
+//	public List<Article> findAll2() {
+//		String sql = "SELECT a.id AS id, a.name AS name, a.content AS content, c.id AS com_id, "
+//				+ "c.name AS com_name, c.content AS com_content, c.article_id AS article_id "
+//				+ "FROM articles AS a JOIN comments AS c ON a.id=c.article_id "
+//				+ "WHERE a.id=c.article_id;";
+//		return template.query(sql, ARTICLE_ROW_MAPPER2);
+//	}
 	
-//	これだとcommentListに1個のコメントしか入らない
-	private static final RowMapper<Article> ARTICLE_ROW_MAPPER2 = (rs, i) -> {
-		Article article = new Article();
-		article.setId(rs.getInt("id"));
-		article.setName(rs.getString("name"));
-		article.setContent(rs.getString("content"));
-		Comment comment = new Comment();
-		comment.setId(rs.getInt("com_id"));
-		comment.setName(rs.getString("com_name"));
-		comment.setContent(rs.getString("com_content"));
-		comment.setArticleId(rs.getInt("article_id"));
-		article.setCommentList(comment);
-		return article;
-	};
+
 }
