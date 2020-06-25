@@ -120,7 +120,7 @@ public class ArticleController {
 	 */
 	@RequestMapping("/delete")
 	public String deleteArticle(Integer articleId) {
-		commentRepository.deleteByArticleId(articleId);
+//		commentRepository.deleteByArticleId(articleId);
 		articleRepository.deleteById(articleId);
 		return "redirect:/article";
 	}

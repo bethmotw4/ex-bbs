@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -21,9 +20,6 @@ import com.example.domain.Comment;
 @Repository
 @Transactional
 public class ArticleRepository2 {
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
-	
 	@Autowired
 	private NamedParameterJdbcTemplate template;
 	
@@ -41,25 +37,36 @@ public class ArticleRepository2 {
 	private static final ResultSetExtractor<List<Article>> ARTICLE_LIST = (rs) -> {
 //		returnする記事一覧
 		List<Article> articleList = new ArrayList<>();
+//		articleに足すコメントリスト
 		List<Comment> commentList = null;
+//		articles.idの数値
 		Integer key = null;
+//		articleオブジェクト
 		Article article = null;
+//		articleが何件あるか?
 		int articleIdx = 0;
+//		commentが何件あるか?
 		int commentIdx = 0;
 		while (rs.next()) {
-//			親テーブルのデータがないまたは、JOINするカラムの値が変わったらarticleのオブジェクト作成
+//			articleのデータがないまたは、articles.idが変わったらarticleのオブジェクト作成
 			if (article == null || !key.equals(rs.getInt("id"))) {
+//				現在のarticles.idを保持
 				key = rs.getInt("id");
 				article = ARTICLE_ROW_MAPPER.mapRow(rs, articleIdx++);
+//				System.out.println(article);
+//				System.out.println("articleIdx" + articleIdx);
 				commentList = new ArrayList<>();
 				article.setCommentList(commentList);
 				commentIdx = 0;
 				articleList.add(article);
 			}
-//			毎行commentテーブルの要素をarticleに追加する
+//			article_idがnullでなければコメントリストに追加
 			if (rs.getObject("article_id") != null) {
 				commentList.add(COMMENT_ROW_MAPPER.mapRow(rs, commentIdx++));
+//				System.out.println("commentIdx" + commentIdx);
+//				System.out.println(article);
 			}
+//			System.out.println("=============================================");
 		}
 		return articleList;
 	};
@@ -93,7 +100,16 @@ public class ArticleRepository2 {
 		String sql = "SELECT a.id AS id, a.name AS name, a.content AS content, c.id AS com_id, "
 				+ "c.name AS com_name, c.content AS com_content, c.article_id AS article_id "
 				+ "FROM articles AS a LEFT OUTER JOIN comments AS c ON a.id=c.article_id "
-				+ "ORDER BY id DESC;";
-		return jdbcTemplate.query(sql, ARTICLE_LIST);
+				+ "ORDER BY id DESC, com_id DESC;";
+		return template.query(sql, ARTICLE_LIST);
+	}
+	
+	
+//	1回のSQLで複数テーブルの消し方がわからん
+//	commentsのtableのforeign keyにon delete cascadeではダメ？
+	public void deleteById2(int id) {
+		String sql = "DELETE FROM articles AS a USING comments AS c WHERE a.id=c.article_id AND a.id=4;";
+		SqlParameterSource source = new MapSqlParameterSource().addValue("id", id);
+		template.update(sql, source);
 	}
 }
